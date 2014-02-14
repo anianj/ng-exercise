@@ -2,7 +2,6 @@
 
 /* Directives */
 
-
 angular.module('myApp.directives', []).
   directive('appVersion', ['version', function(version) {
     return function(scope, elm, attrs) {
@@ -10,18 +9,25 @@ angular.module('myApp.directives', []).
     };
   }]).
   directive('jtParent',[function() {
-      console.log('=============jt-Parent: This is warpper function=====================')
+      console.log('=jt-Parent: This is warpper function=====================')
       return {
-          link: function(scope,ielm,iattrs){
-              console.log('====================jt-Parent: This is link function.=================')
+          //template: 'Hello this is replaced parent content',
+          compile: function(telm,tattrs,trunsclude){
+            console.log('==jt-Parent: This is compile function.=================')
+            return  function(scope,ielm,iattrs){
+                      console.log('==jt-Parent: This is link function.=================')
+                    }
           }
       }
   }]).
   directive('jtChild',[function(){
-      console.log('=============jt-Child: This is warpper function=====================')
+      console.log('=jt-Child: This is warpper function=====================')
       return {
-          link: function(scope,ielm,iattrs){
-              console.log('====================jt-Child: This is link function.=================')
+           compile: function(telm,tattrs,trunsclude){
+            console.log('==jt-Child: This is compile function.=================')
+            return  function(scope,ielm,iattrs){
+                      console.log('==jt-Child: This is link function.=================')
+                    }
           }
       }
   }]);
