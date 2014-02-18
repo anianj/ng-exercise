@@ -5,7 +5,7 @@
     <title>My AngularJS App</title>
     <link rel="stylesheet" href="css/app.css"/>
 </head>
-<body>
+<body bgcolor="red">
     <ul class="menu">
         <li>
             <a href="#/view1">view1</a>
@@ -22,18 +22,22 @@
         <span app-version></span>
     </div>
 
-    <div jt-parent jt-parent-index=1>
+    <div jt-parent jt-parent-index="1">
         <p>This is JT Parent</p>
-        <div jt-child jt-child-index=1>
+        <div jt-child jt-child-index="1">
             <p>This is JT Child</p>
         </div>
     </div>
 
-    <div jt-parent jt-parent-index=2>
+    <div jt-parent jt-parent-index="2">
         <p>This is JT Parent</p>
-        <div jt-child jt-child-index=2>
+        <div jt-child jt-child-index="2">
             <p>This is JT Child</p>
         </div>
+    </div>
+
+    <div ng-controller="MyCtrl1">
+        <color-word v = 'v'/>
     </div>
 
     <!-- In production use:

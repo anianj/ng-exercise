@@ -30,4 +30,24 @@ angular.module('myApp.directives', []).
                     }
           }
       }
-  }]);
+  }]).
+  directive('colorWord', function() {
+    return {
+      scope: {
+        v: "@"
+      },
+      restrict: 'AE',
+      replace: true,
+      template: '<span>Hello {{v}}</span>',
+      link: function(scope, elem, attrs) {
+        elem.bind('click', function() {
+          scope.$apply(function() {
+            scope.v = "white";
+          });
+        });
+        elem.bind('mouseover', function() {
+          elem.css('cursor', 'pointer');
+        });
+      }
+    };
+  });
