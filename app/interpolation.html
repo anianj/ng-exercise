@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html ng-app="Directives">
+<head>
+	<title>Interpolation</title>
+</head>
+<body ng-controller="MainCtrl">
+	<ul test>
+		<li ng-repeat="d in dataset">{{d}}</li>
+	</ul>
+	<input type="text" ng-model="v1" name="" value="">
+	<input type="text" ng-model="v2" name="" value="">
+	<script src="lib/angular/angular.js"></script>
+	<script>
+	/**
+	* myApp Module
+	*
+	* Description
+	*/
+	'use strict';
+
+var app = angular.module('Directives', []);
+
+app.controller('MainCtrl', function ($scope) {
+   $scope.dataset = [{id:1}, {id:2}, {id:3}];
+});
+
+app.directive('test', function ($timeout) {
+  return {
+            restrict: 'A',
+            scope: {}, //if it is commented out, li would render
+            link: function (scope, elm, attrs) {
+                console.log('Inside link..');
+            }
+    };
+});
+</script>
+</body>
+</html>

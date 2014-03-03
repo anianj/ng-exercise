@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Compile Experiment</title>
+</head>
+<body bgcolor="red">
+
+    <!-- In production use:
+  <script src="//ajax.googleapis.com/ajax/libs/angularjs/x.x.x/angular.min.js"></script>
+-->
+<script src="lib/angular/angular.js"></script>
+<script>
+    var myApp = angular.module('myApp',[]).
+    directive('jtDirec', [function(){
+        // Runs during compile
+        return {
+            // name: '',
+            // priority: 1,
+            // terminal: true,
+            scope: {}, // {} = isolate, true = child, false/undefined = no change
+            controller: function($scope, $element, $attrs, $transclude) {
+                console.log('controller function');
+            },
+            // require: 'ngModel', // Array = multiple requires, ? = optional, ^ = check parent elements
+            // restrict: 'A', // E = Element, A = Attribute, C = Class, M = Comment
+            // template: '',
+            // templateUrl: '',
+            // replace: true,
+            // transclude: true,
+            // compile: function(tElement, tAttrs, function transclude(function(scope, cloneLinkingFn){ return function linking(scope, elm, attrs){}})),
+            link: {
+                pre: function($scope, iElm, iAttrs, controller) {
+                    console.log('pre link function')
+                },
+                post: function($scope,iElm,iAttrs,controller){
+                    console.log('post link function')
+                }
+            }
+        };
+    }]);
+    var injector = angular.injector(['ng','myApp']);
+    var rootScope = injector.get('$rootScope')
+    var compile = injector.get('$compile');
+    var tpl = angular.element('<div jt-direc></div>');
+    var linkFn = compile(tpl);
+    var ele = linkFn(rootScope)
+</script>
+</body>
+</html>

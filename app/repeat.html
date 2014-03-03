@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html ng-app="myApp">
+<head>
+    <title>repeater</title>
+    <style type="text/css" media="screen">
+        .active{
+            border: 1px #FFEEEE dotted;
+        }
+    </style>
+</head>
+<body>
+    <div ng-controller="myCtrl">
+        <div ng-repeat="item in items">
+            <span ng-click="item.active=true" ng-class="{active:item.active}">{{item.name}}</span>
+        </div>
+        <div ng-repeat="item in items">
+            <span ng-click="item.active=true" ng-class="{active:item.active}">{{item.name}}</span>
+        </div>
+        <hr/>
+        <span>{{items[0]}}</span>
+        <hr/>
+        <div ng-repeat="item in aitems">
+            {{item}}
+            <input type="text" ng-model='item' />
+
+        </div>
+        <hr/>
+        {{aitems}}
+    </div>
+    <script src="lib/angular/angular.js"></script>
+    <script>
+/**
+* myApp Module
+*
+* Description
+*/
+angular.module('myApp', []).controller('myCtrl', ['$scope', function($scope){
+    $scope.items = [
+        {'name':'i1','active':false},
+        {'name':'i2','active':false},
+        {'name':'i3','active':false}
+    ];
+    $scope.aitems = [1,2];
+}])
+</script>
+</body>
+</html>
