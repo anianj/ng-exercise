@@ -1,43 +1,119 @@
 <!DOCTYPE html>
 <html ng-app="app">
+
 <head>
-	<title>Scope</title>
+    <title>Scope</title>
+    <style type="text/css">
+    li {
+        float: left;
+    }
+    </style>
 </head>
+
 <body ng-controller="mainCtrl">
-	<input ng-model='v' type="text" name="" value="">
-	<div nj-test>
-	</div>
-	
-	<script src='lib/angular/angular.js'></script>
-	<script>
-		/**
-		* app Module
-		*
-		* Description
-		*/
-		angular.module('app',[]).controller('mainCtrl', ['$scope', function($scope){
-			$scope.v = 12
-		}]).directive('njTest', [function(){
-			// Runs during compile
-			return {
-				// name: '',
-				// priority: 1,
-				// terminal: true,
-				scope: {v:'='}, // {} = isolate, true = child, false/undefined = no change
-				controller: function($scope, $element, $attrs, $transclude) {
-					console.debug(this == $scope);
-				},
-				// require: 'ngModel', // Array = multiple requires, ? = optional, ^ = check parent elements
-				// restrict: 'A', // E = Element, A = Attribute, C = Class, M = Comment
-				// template: '',
-				// templateUrl: '',
-				// replace: true,
-				// transclude: true,
-				// compile: function(tElement, tAttrs, function transclude(function(scope, cloneLinkingFn){ return function linking(scope, elm, attrs){}})),
-				link: function($scope, iElm, iAttrs, controller) {
-				}
-			};
-		}]);
-	</script>
+    <input ng-model='v' type="text" name="" value="">
+    <ul nj-test on='u'>
+        <li nj-test-child act="{{1}}">{{v}}</li>
+    </ul>
+
+    <script src='lib/angular/angular.js'></script>
+    <script>
+    /**
+     * app Module
+     *
+     * Description
+     */
+    angular.module('app', []).controller('mainCtrl', ['$scope', '$log',
+        function($scope, $log) {
+            $scope.u = 13;
+            $scope.v = 'hello world';
+        }
+    ]).directive('njTest', ['$log',
+        function($log) {
+            // Runs during compile
+            return {
+                // name: '',
+                // priority: 1,
+                // terminal: true,
+                scope: {
+                    on: "="
+                }, // {} = isolate, true = child, false/undefined = no change
+                controller: function($scope, $element, $attrs, $transclude) {
+                    // $transclude($scope,function(clone){
+                    // 	$element.append(clone);
+                    // })
+                },
+                // require: 'ngModel', // Array = multiple requires, ? = optional, ^ = check parent elements
+                // restrict: 'A', // E = Element, A = Attribute, C = Class, M = Comment
+                template: '<div></div>',
+                // templateUrl: '',
+                replace: true,
+                transclude: 'element',
+                compile: function(tElement, tAttrs, transcludeFn) {
+
+                    return function postlinking(scope, elm, attrs, controller, transclude) {
+                        // append the transcluded the content of switcher
+                        transclude(scope.$parent, function(clone) {
+                            elm.prepend(clone);
+                        })
+
+                        //watching 'on' property, if it changes, it needs to update the item's 'active' property
+                        scope.$watch('on', function onValueChange(newVal, oldVal) {
+                            $log.debug(elm.find('li').prop('offsetWidth'));
+                        });
+                    }
+                },
+                // link: function($scope, iElm, iAttrs, controller,transclude) {
+                // 	transclude($scope.$parent,function(clone){
+                // 		iElm.append(clone);
+                // 	})
+                //     $scope.$watch('u', function() {
+                //         $log.debug(iElm.find('span').prop('offsetWidth'));
+                //     })
+                // }
+            };
+        }
+    ]).directive('njTestChild', ['$log',
+        function($log) {
+            // Runs during compile
+            return {
+                // name: '',
+                // priority: 1001,
+                // terminal: true,
+                scope: {
+                    act: "@"
+                }, // {} = isolate, true = child, false/undefined = no change
+                controller: function($scope, $element, $attrs, $transclude) {
+                    // $transclude($scope,function(clone){
+                    // 	$element.append(clone);
+                    // })
+                },
+                // require: 'ngModel', // Array = multiple requires, ? = optional, ^ = check parent elements
+                // restrict: 'A', // E = Element, A = Attribute, C = Class, M = Comment
+                template: '<li></li>',
+                // templateUrl: '',
+                replace: true,
+                transclude: true,
+                compile: function(tElement, tAttrs, transcludeFn) {
+
+                    return function postlinking(scope, elm, attrs, controller, transclude) {
+                        transclude(scope.$parent, function(clone) {
+                            elm.append(clone);
+                        })
+                    }
+                },
+                // link: function($scope, iElm, iAttrs, controller,transclude) {
+                // 	transclude($scope.$parent,function(clone){
+                // 		iElm.append(clone);
+                // 	})
+                //     $scope.$watch('u', function() {
+                //         $log.debug(iElm.find('span').prop('offsetWidth'));
+                //     })
+                // }
+            };
+        }
+    ]);
+    </script>
 </body>
+
 </html>

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html ng-app="app" id='$002' nj-scope-id>
+
+<head>
+    <title>Transclude</title>
+    <style type="text/css">
+    .ng-scope {
+        border:red 1px dashed;
+        min-height: 20px;
+    }
+    .ng-isolate-scope{
+        border:blue 1px solid;
+        min-height: 20px;
+    }
+    </style>
+</head>
+
+<body>
+    <div ng-controller="mainCtrl" id="$003" nj-scope-id>
+        <p id="$003" nj-scope-id>{{act}}</p>
+        <hr/>
+        <ul nj-test v2="v2" id="$003" isolate-id="$004" nj-scope-id>
+            <li>{{v2}}</li>
+        </ul>
+    </div>
+    <script src="lib/angular/angular.js"></script>
+    <script>
+    /**
+     * app Module
+     *
+     * Description
+     */
+    angular.module('app', []).controller('mainCtrl', ['$log', '$scope',
+        function($log, $scope) {
+            $scope.v2 = 'mainCtrl-v2';
+            $scope.act = "mainCtrl-nianj";
+        }
+    ]).directive('njScopeId', ['$log', function($log){
+        // Runs during compile
+        return {
+            // name: '',
+            // priority: 1,
+            // terminal: true,
+            // scope: {}, // {} = isolate, true = child, false/undefined = no change
+            // controller: function($scope, $element, $attrs, $transclude) {},
+            // require: 'ngModel', // Array = multiple requires, ? = optional, ^ = check parent elements
+            // restrict: 'A', // E = Element, A = Attribute, C = Class, M = Comment
+            // template: '',
+            // templateUrl: '',
+            // replace: true,
+            // transclude: true,
+            // compile: function(tElement, tAttrs, function transclude(function(scope, cloneLinkingFn){ return function linking(scope, elm, attrs){}})),
+            link: function($scope, iElm, iAttrs, controller) {
+                iAttrs.$set('x-scope-id',$scope.$id);
+            }
+        };
+    }]).directive('njIsolateScopeId', ['$log', function($log){
+        // Runs during compile
+        return {
+            // name: '',
+            // priority: 1,
+            // terminal: true,
+            // scope: {}, // {} = isolate, true = child, false/undefined = no change
+            // controller: function($scope, $element, $attrs, $transclude) {},
+            // require: 'ngModel', // Array = multiple requires, ? = optional, ^ = check parent elements
+            // restrict: 'A', // E = Element, A = Attribute, C = Class, M = Comment
+            // template: '',
+            // templateUrl: '',
+            // replace: true,
+            // transclude: true,
+            // compile: function(tElement, tAttrs, function transclude(function(scope, cloneLinkingFn){ return function linking(scope, elm, attrs){}})),
+            link: function($scope, iElm, iAttrs, controller) {
+                iAttrs.$set('x-scope-id',$isolatedscope.$id);
+            }
+        };
+    }]).directive('njTest', ['$log',
+        function($log) {
+            // Runs during compile
+            return {
+                // name: '',
+                // priority: 1,
+                // terminal: true,
+                scope: {v2:"="}, // {} = isolate, true = child, false/undefined = no change
+                controller: function($scope, $element, $attrs, $transclude) {
+                    // this.transclude = $transclude;
+                },
+                // require: 'ngModel', // Array = multiple requires, ? = optional, ^ = check parent elements
+                // restrict: 'A', // E = Element, A = Attribute, C = Class, M = Comment
+                template: '<div class="text"><span ng-bind="v2" nj-scope-id></span></div>',
+                // templateUrl: '',
+                replace: true,
+                transclude: 'element',
+                compile: function(tElement, tAttrs, transcludeFn) {
+                    return function linking(scope, elm, attrs, controller,transclude) {
+                        transclude(scope,function(clone){
+                            elm.append(clone);
+                        })
+                    }
+                },
+                // link: function($scope, iElm, iAttrs, controller,transclude) {}
+            };
+        }
+    ]).directive('njTestChild', ['$log',
+        function($log) {
+            // Runs during compile
+            return {
+                // name: '',
+                // priority: 1,
+                // terminal: true,
+                scope: {
+                    act: '='
+                }, // {} = isolate, true = child, false/undefined = no change
+                // controller: function($scope, $element, $attrs, $transclude) {},
+                require: '^njTest', // Array = multiple requires, ? = optional, ^ = check parent elements
+                // restrict: 'A', // E = Element, A = Attribute, C = Class, M = Comment
+                template: '<li class="test" ng-transclude>Test</li>',
+                // templateUrl: '',
+                replace: true,
+                transclude: true,
+                compile: function(tElement, tAttrs, transclude) {
+                    return function linking(scope, elm, attrs) {
+
+                    }
+                },
+                // link: function($scope, iElm, iAttrs, controller) {}
+            };
+        }
+    ]);
+    </script>
+</body>
+
+</html>
